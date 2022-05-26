@@ -33,13 +33,14 @@ def get_fitness(self):
             sum = sum + self.representation[i + j * 9]
         columns = columns + abs(sum - 45)
 
-    for i in range(3):
-        for j in range(3):
-            sum = 0
-            for k in range(i * 3, i * 3 + 3):
-                for l in range(j * 3, j * 3 + 3):
-                    sum = sum + self.representation[k * 9 + l]
-            blocks = blocks + abs(sum - 45)
+    for box_num in range(9):
+        row = 3 * int(box_num / 3)
+        col = 3 * (box_num % 3)
+        sum = 0
+        for i in range(row, row + 3):
+            for j in range(col, col + 3):
+                sum = sum + self.representation[i * 9 + j]
+        blocks = blocks + abs(sum - 45)
 
     return rows + columns + blocks
 

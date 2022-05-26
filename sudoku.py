@@ -11,21 +11,37 @@ from operator import attrgetter
 
 def get_fitness(self):
     """A fitness function for the Sudoku Problem.
-    Calculates ...
-    Otherwise, the fitness value will be proportional to how bad it is.
+    Calculates the fitness of rows, columns and blocks in terms of repetition and sum
 
     Returns:
-        int: ...
+        int: the closer to 0 the better
     """
-    fitness = 0
-    # weight = 0
-    # for bit in range(len(self.representation)):
-    #     if self.representation[bit] == 1:
-    #         fitness += values[bit]
-    #         weight += weights[bit]
-    # if weight > capacity:
-    #     fitness = capacity-weight
-    return fitness
+
+    rows = 0
+    columns = 0
+    blocks = 0
+
+    for i in range(9):
+        sum = 0
+        for j in range(9):
+            sum = sum + self.representation[i * 9 + j]
+        rows = rows + abs(sum - 45)
+
+    for i in range(9):
+        sum = 0
+        for j in range(9):
+            sum = sum + self.representation[i + j * 9]
+        columns = columns + abs(sum - 45)
+
+    for i in range(3):
+        for j in range(3):
+            sum = 0
+            for k in range(i * 3, i * 3 + 3):
+                for l in range(j * 3, j * 3 + 3):
+                    sum = sum + self.representation[k * 9 + l]
+            blocks = blocks + abs(sum - 45)
+
+    return rows + columns + blocks
 
 
 def get_neighbours(self):

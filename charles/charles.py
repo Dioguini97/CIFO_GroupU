@@ -1,21 +1,22 @@
+from typing import List
 from random import shuffle, choice, sample, random
 from operator import attrgetter
 from copy import deepcopy
+import sys
 
 
 class Individual:
     def __init__(
         self,
         representation=None,
-        size=None,
-        replacement=True,
         valid_set=None,
+        init_repr=None,
+        mutable_indexes=None,
     ):
         if representation is None:
-            if replacement == True:
-                self.representation = [choice(valid_set) for i in range(size)]
-            elif replacement == False:
-                self.representation = sample(valid_set, size)
+            self.representation = init_repr
+            for i in mutable_indexes:
+                self.representation[i] = choice(valid_set)
         else:
             self.representation = representation
         self.fitness = self.get_fitness()
@@ -47,12 +48,19 @@ class Population:
         self.individuals = []
         self.size = size
         self.optim = optim
+        self.init_repr = kwargs["init_repr"]
+        self.valid_set = kwargs["valid_set"]
+        self.mutable_indexes = []
+        for i, v in enumerate(self.init_repr):
+            if v == 0:
+                self.mutable_indexes.append(i)
+
         for _ in range(size):
             self.individuals.append(
                 Individual(
-                    size=kwargs["sol_size"],
-                    replacement=kwargs["replacement"],
-                    valid_set=kwargs["valid_set"],
+                    valid_set=list(self.valid_set),
+                    init_repr=self.init_repr,
+                    mutable_indexes=self.mutable_indexes,
                 )
             )
 
@@ -75,9 +83,9 @@ class Population:
                     offspring1, offspring2 = parent1, parent2
                 # Mutation
                 if random() < mu_p:
-                    offspring1 = mutate(offspring1)
+                    offspring1 = mutate(offspring1, self.mutable_indexes, self.valid_set)
                 if random() < mu_p:
-                    offspring2 = mutate(offspring2)
+                    offspring2 = mutate(offspring2, self.mutable_indexes, self.valid_set)
 
                 new_pop.append(Individual(representation=offspring1))
                 if len(new_pop) < self.size:
@@ -94,9 +102,10 @@ class Population:
             self.individuals = new_pop
 
             if self.optim == "max":
-                print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
+                print(f'Best Individual gen {gen}: {max(self, key=attrgetter("fitness"))}')
             elif self.optim == "min":
-                print(f'Best Individual: {min(self, key=attrgetter("fitness"))}')
+                print(f'Best Individual gen {gen}: {min(self, key=attrgetter("fitness"))}')
+
 
     def __len__(self):
         return len(self.individuals)

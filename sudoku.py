@@ -3,7 +3,7 @@ from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
 from data.sudoku_data import values
 from charles.selection import fps, tournament
-from charles.mutation import binary_mutation
+from charles.mutation import replace_mutation
 from charles.crossover import single_point_co
 from random import random
 from operator import attrgetter
@@ -68,12 +68,12 @@ Individual.get_fitness = get_fitness
 Individual.get_neighbours = get_neighbours
 
 pop = Population(
-    size=20, optim="max", sol_size=len(values), valid_set=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], replacement=True
+    size=20, optim="min", init_repr=values, valid_set=[1, 2, 3, 4, 5, 6, 7, 8, 9]
 )
 
 pop.evolve(gens=100,
            select=tournament,
            crossover=single_point_co,
-           mutate=binary_mutation,
+           mutate=replace_mutation,
            co_p=0.9, mu_p=0.1,
            elitism=True)

@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, uniform, sample
 
 
 def single_point_co(p1, p2):
@@ -55,6 +55,65 @@ def cycle_co(p1, p2):
                     offspring2[index] = p1[index]
 
     return offspring1, offspring2
+
+def pmx_co(p1, p2):
+    """Implementation of partially matched/mapped crossover.
+
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+
+    Returns:
+        Individuals: Two offspring, resulting from the crossover.
+    """
+    co_points = sample(range(len(p1)), 2)
+    co_points.sort()
+
+    def PMX(x, y):
+        o = [None] * len(x)
+
+        o[co_points[0]:co_points[1]] = x[co_points[0]:co_points[1]]
+
+        z = set(y[co_points[0]:co_points[1]]) - set(x[co_points[0]:co_points[1]])
+
+        for i in z:
+            temp = i
+            index = y.index(x[y.index(temp)])
+            while o[index] is not None:
+                temp = index
+                index = y.index(x[temp])
+            o[index] = i
+
+        while None in o:
+            index = o.index(None)
+            o[index] = y[index]
+        return o
+
+    o1, o2 = PMX(p1, p2), PMX(p2, p1)
+    return o1, o2
+
+def arithmetic_co(p1, p2):
+    """Implementation of arithmetic crossover.
+
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+
+    Returns:
+        Individuals: Two offspring, resulting from the crossover.
+    """
+    # Offspring placeholders - None values make it easy to debug for errors
+    offspring1 = [None] * len(p1)
+    offspring2 = [None] * len(p1)
+    # Set a value for alpha between 0 and 1
+    alpha = uniform(0, 1)
+    # Take weighted sum of two parents, invert alpha for second offspring
+    for i in range(len(p1)):
+        offspring1[i] = int(p1[i] * alpha + (1 - alpha) * p2[i])
+        offspring2[i] = int(p2[i] * alpha + (1 - alpha) * p1[i])
+
+    return offspring1, offspring2
+
 
 
 if __name__ == '__main__':

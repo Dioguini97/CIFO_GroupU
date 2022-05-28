@@ -65,10 +65,11 @@ class Population:
             )
 
     def evolve(self, gens, select, crossover, mutate, co_p, mu_p, elitism):
+        best_individual = None
         for gen in range(gens):
             new_pop = []
 
-            if elitism == True:
+            if elitism:
                 if self.optim == "max":
                     elite = deepcopy(max(self.individuals, key=attrgetter("fitness")))
                 elif self.optim == "min":
@@ -91,7 +92,7 @@ class Population:
                 if len(new_pop) < self.size:
                     new_pop.append(Individual(representation=offspring2))
 
-            if elitism == True:
+            if elitism:
                 if self.optim == "max":
                     least = min(new_pop, key=attrgetter("fitness"))
                 elif self.optim == "min":
@@ -102,10 +103,15 @@ class Population:
             self.individuals = new_pop
 
             if self.optim == "max":
-                print(f'Best Individual gen {gen}: {max(self, key=attrgetter("fitness"))}')
-            elif self.optim == "min":
-                print(f'Best Individual gen {gen}: {min(self, key=attrgetter("fitness"))}')
+                best_individual = max(self, key=attrgetter("fitness"))
 
+            elif self.optim == "min":
+                best_individual = min(self, key=attrgetter("fitness"))
+
+            print(f'Best Individual gen {gen}: {best_individual}')
+
+        print(best_individual.representation)
+        return best_individual
 
     def __len__(self):
         return len(self.individuals)

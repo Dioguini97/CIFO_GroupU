@@ -61,19 +61,5 @@ class Individual:
         else:
             return True
 
-
-board = ''
-lista = [0 for i in range(81)]
-for index, item in enumerate(lista):
-    if index % 9 == 8:
-        board += str(item) + '\n'
-        if (index % 8 == 2) | (index % 8 == 5):
-            board += str('---------------------') + '\n'
-    elif index % 3 == 2:
-        board += str(item) + ' | '
-    else:
-        board += str(item) + ' '
-
-
 a = Individual(lista)
 print(a.check_box(0), a.check_col(0), a.check_row(0))

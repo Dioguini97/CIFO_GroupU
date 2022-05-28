@@ -3,8 +3,8 @@ from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
 from data.sudoku_data import values
 from charles.selection import fps, tournament
-from charles.mutation import replace_mutation
-from charles.crossover import single_point_co
+from charles.mutation import replace_mutation, swap_mutation
+from charles.crossover import single_point_co, cycle_co
 from random import random
 from operator import attrgetter
 

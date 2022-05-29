@@ -1,6 +1,9 @@
 from random import uniform, choice
 from operator import attrgetter
 
+import numpy
+from numpy import random
+
 
 def fps(population):
     """Fitness proportionate selection implementation.
@@ -34,6 +37,28 @@ def fps(population):
 
     else:
         raise Exception("No optimization specified (min or max).")
+
+
+def ranking(population):
+    """Ranking selection implementation.
+
+    Args:
+        population (Population): The population we want to select from.
+
+    Returns:
+        Individual: selected individual.
+    """
+
+    if population.optim == "max":
+        pop_sorted = sorted(population, key=attrgetter("fitness"))
+    elif population.optim == "min":
+        pop_sorted = sorted(population, key=attrgetter("fitness"), reverse=True)
+    else:
+        raise Exception("No optimization specified (min or max).")
+
+    probs = [(rank + 1) / sum(range(len(pop_sorted) + 1)) for rank, _ in enumerate(pop_sorted)]
+    index = random.choice(len(pop_sorted), p=probs)
+    return pop_sorted[index]
 
 
 def tournament(population, size=10):

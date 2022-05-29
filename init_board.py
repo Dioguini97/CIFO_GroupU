@@ -17,7 +17,13 @@ def init_board(level="easy"):
 
     init_positions = sample([i for i in range(81)], numbers)
 
-    return init_numbers, init_positions
+    mutable_indexes = []
+    for index in range(81):
+        if index not in init_positions:
+            mutable_indexes.append(index)
+
+
+    return init_numbers, mutable_indexes
 
 
 
@@ -29,7 +35,7 @@ def build_board():
     for index, number in enumerate(init_b[0]):
         board[init_b[1][index]] = number
 
-    return board
+    return board, init_b[1]
 
 
 valid_init_boards = []
@@ -37,9 +43,9 @@ valid_init_boards = []
 while len(valid_init_boards) < 5:
     board = build_board()
 
-    rows = [check_row(board, i) for i in range(9)]
-    cols = [check_col(board, i) for i in range(9)]
-    boxs = [check_box(board, i) for i in range(9)]
+    rows = [check_row(board[0], i) for i in range(9)]
+    cols = [check_col(board[0], i) for i in range(9)]
+    boxs = [check_box(board[0], i) for i in range(9)]
 
     if all(rows) & all(cols) & all(boxs):
         valid_init_boards.append(board)
@@ -48,7 +54,7 @@ while len(valid_init_boards) < 5:
 for board in valid_init_boards:
     board_ = ''
 
-    for index, item in enumerate(board):
+    for index, item in enumerate(board[0]):
         if index % 9 == 8:
             board_ += str(item) + '\n'
             if (index % 8 == 2) | (index % 8 == 5):

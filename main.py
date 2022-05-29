@@ -1,11 +1,3 @@
-from charles.charles import Population, Individual
-from charles.search import hill_climb, sim_annealing
-from charles.selection import fps, tournament
-from charles.mutation import inversion_mutation, binary_mutation, swap_mutation
-from charles.crossover import single_point_co, cycle_co, pmx_co, arithmetic_co
-from init_board import valid_init_boards
-
-
 def check_row(self, row):
     lista = [self.__getitem__(i) for i in range(row * 9, (row + 1) * 9)]
 

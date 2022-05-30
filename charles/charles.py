@@ -108,10 +108,7 @@ class Population:
             elif self.optim == "min":
                 best_individual = min(self, key=attrgetter("fitness"))
 
-            print(f'Best Individual gen {gen}: {best_individual}')
-
-        print(best_individual.representation)
-        return best_individual
+        return best_individual.fitness
 
     def __len__(self):
         return len(self.individuals)

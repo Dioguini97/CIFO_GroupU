@@ -1,4 +1,4 @@
-from random import choice, randint, sample
+from random import choice, sample
 
 
 def replace_mutation(individual, mutable_indexes, valid_set):

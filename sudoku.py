@@ -107,12 +107,14 @@ def total_check():
     selections = [fps, tournament, ranking]
     crossovers = [single_point_co, cycle_co]
     mutations = [swap_mutation, replace_mutation]
+    elitism = [True, False]
 
-    for s, c, m in [
-        (s, c, m)
+    for s, c, m, e in [
+        (s, c, m, e)
         for s in selections
         for c in crossovers
         for m in mutations
+        for e in elitism
     ]:
         check_setting(
             size=50,
@@ -122,7 +124,7 @@ def total_check():
             mutate=m,
             co_p=0.8,
             mu_p=0.2,
-            elitism=True
+            elitism=e
         )
         print()
 

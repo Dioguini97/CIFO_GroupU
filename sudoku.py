@@ -79,7 +79,7 @@ def check_setting(
 ):
     total_runs = 10
     pop = Population(
-        size=size, optim="min", init_repr=deepcopy(values), valid_set=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+        size=size, optim="min", init_repr=deepcopy(hard), valid_set=[1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     fitness = []
     for _ in range(total_runs):
@@ -94,14 +94,6 @@ def check_setting(
                 elitism=elitism
             )
         )
-    print(f"Select: {select.__name__}")
-    print(f"Crossover: {crossover.__name__}")
-    print(f"Mutation: {mutate.__name__}")
-    print(f"Elitism: {elitism}")
-#    print(f"Solutions: {fitness}")
-    print(f"Best solution: {min(fitness)}")
-    print(f"Average solution: {sum(fitness) / total_runs}")
-    print(f"Std: {std(fitness)}")
 
 
 def total_check():

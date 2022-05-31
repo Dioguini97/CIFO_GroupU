@@ -3,7 +3,7 @@ from copy import deepcopy
 from data.sudoku_data import values
 from charles.selection import fps, tournament, ranking
 from charles.mutation import random_resetting, swap, scramble, inversion
-from charles.crossover import single_point_co, cycle_co
+from charles.crossover import single_point_co, multi_point_co, cycle_co, uniform_co
 from numpy import std
 
 
@@ -105,7 +105,7 @@ def check_setting(
 
 def total_check():
     selections = [fps, tournament, ranking]
-    crossovers = [single_point_co, cycle_co]
+    crossovers = [single_point_co, multi_point_co, cycle_co, uniform_co]
     mutations = [random_resetting, swap, scramble, inversion]
     elitism = [True, False]
 

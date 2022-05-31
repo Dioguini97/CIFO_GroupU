@@ -77,6 +77,38 @@ def cycle_co(p1, p2):
     return offspring1, offspring2
 
 
+def uniform_co(p1, p2):
+    """Implementation of cycle crossover.
+
+    Args:
+        p1 (Individual): First parent for crossover.
+        p2 (Individual): Second parent for crossover.
+
+    Returns:
+        Individuals: Two offsprings, resulting from the crossover.
+    """
+
+    if len(p1) != len(p2):
+        raise Exception("Parents' lengths are not equal.")
+
+    length = len(p1)
+
+    # Offspring placeholders - None values make it easy to debug for errors
+    offspring1 = [None] * length
+    offspring2 = [None] * length
+    # While there are still None values in offspring, get the first index of
+    # None and start a "cycle" according to the cycle crossover method
+    for index in range(length):
+        if randint(0, 1) == 0:
+            offspring1[index] = p1[index]
+            offspring2[index] = p2[index]
+        else:
+            offspring1[index] = p2[index]
+            offspring2[index] = p1[index]
+
+    return offspring1, offspring2
+
+
 if __name__ == '__main__':
     p1, p2 = [2, 7, 4, 3, 1, 5, 6, 9, 8], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     o1, o2 = cycle_co(p1, p2)

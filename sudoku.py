@@ -21,32 +21,20 @@ def get_fitness(self):
 
     result = 0
 
-    for box in boxs:
+    '''for box in boxs:
         for index, value in enumerate(box):
             for index_, value_ in enumerate(box):
                 if index == index_:
                     pass
                 else:
                     if (value == 0) | (value == value_):
-                        result += 1
+                        result += 1'''
 
-    for row in rows:
-        for index, value in enumerate(row):
-            for index_, value_ in enumerate(row):
-                if index == index_:
-                    pass
-                else:
-                    if (value == 0) | (value == value_):
-                        result += 1
+    for row in range(len(rows)):
+        result += self.get_row_fit(row)
 
-    for col in cols:
-        for index, value in enumerate(col):
-            for index_, value_ in enumerate(col):
-                if index == index_:
-                    pass
-                else:
-                    if (value == 0) | (value == value_):
-                        result += 1
+    for col in range(len(cols)):
+        result += self.get_col_fit(col)
 
     return result
 
@@ -58,18 +46,16 @@ def get_neighbours(self):
     """
     n = [deepcopy(self.representation) for _ in range(9)]
 
-    '''for count, i in enumerate(n):
+    for count, i in enumerate(n):
         if i[count] == 1:
             i[count] = 0
         elif i[count] == 0:
-            i[count] = 1'''
+            i[count] = 1
+    '''for rep in n:
+        for i in rep.mutable_indexes:
+            if rep.representation[i] == 0:
+                rep.representation[i] = choice(rep.valid_set)'''
 
-    for i in self.representation:
-        if i == 0:
-            first = self.index(i)
-
-    for count, rep in enumerate(n):
-        rep[first] = count + 1
 
     return [Individual(i) for i in n]
 
@@ -82,9 +68,9 @@ first_board = choice(valid_init_boards)
 
 pop = Population(size=50, optim="min", init_repr=first_board[0], mutable_indexes=first_board[1], valid_set=[i for i in range(1, 10)])
 
-pop.evolve(gens=100,
+pop.evolve(gens=200,
            select=tournament,
            crossover=single_point_co,
-           mutate=replace_mutation,
+           mutate=inversion_mutation,
            co_p=0.9, mu_p=0.1,
            elitism=True)

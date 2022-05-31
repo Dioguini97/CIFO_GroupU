@@ -73,6 +73,20 @@ class Individual:
                             return False
         return True
 
+    def get_row_fit(self, row):
+
+        result = 0
+        for index, value in enumerate(row):
+            for index_, value_ in enumerate(row):
+                if index == index_:
+                    pass
+                else:
+                    if (value == 0) | (value == value_):
+                        result += 1
+
+        return result
+
+
     def check_col(self, col):
         lista = [self.__getitem__(i) for i in range(col, 73 + col, 9)]
         valid_list = [j for j in lista if j != 0]
@@ -88,6 +102,20 @@ class Individual:
                         if val == val_:
                             return False
         return True
+
+    def get_col_fit(self, col):
+
+        result = 0
+        for index, value in enumerate(col):
+            for index_, value_ in enumerate(col):
+                if index == index_:
+                    pass
+                else:
+                    if (value == 0) | (value == value_):
+                        result += 1
+
+        return result
+
 
     def check_box(self, box):
 

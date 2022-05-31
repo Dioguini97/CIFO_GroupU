@@ -65,7 +65,7 @@ class Population:
             )
 
     def evolve(self, gens, select, crossover, mutate, co_p, mu_p, elitism):
-        best_individual = None
+        best_individuals = []
         for gen in range(gens):
             new_pop = []
 
@@ -103,12 +103,14 @@ class Population:
             self.individuals = new_pop
 
             if self.optim == "max":
-                best_individual = max(self, key=attrgetter("fitness"))
+                best_individuals.append(max(self, key=attrgetter("fitness")))
 
             elif self.optim == "min":
-                best_individual = min(self, key=attrgetter("fitness"))
+                best_individuals.append(min(self, key=attrgetter("fitness")).fitness)
+                if best_individuals[-1] == 0:
+                    return best_individuals
 
-        return best_individual.fitness
+        return best_individuals
 
     def __len__(self):
         return len(self.individuals)

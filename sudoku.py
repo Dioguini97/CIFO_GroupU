@@ -1,6 +1,7 @@
+import plotly.graph_objects as go
 from charles.charles import Population, Individual
 from copy import deepcopy
-from data.sudoku_data import values
+from data.sudoku_data import evil, hard, simple
 from charles.selection import fps, tournament, ranking
 from charles.mutation import random_resetting, swap, scramble, inversion
 from charles.crossover import single_point_co, multi_point_co, cycle_co, uniform_co
@@ -104,29 +105,68 @@ def check_setting(
 
 
 def total_check():
-    selections = [fps, tournament, ranking]
-    crossovers = [single_point_co, multi_point_co, cycle_co, uniform_co]
-    mutations = [random_resetting, swap, scramble, inversion]
-    elitism = [True, False]
+    comp_figure = go.Figure()
 
-    for s, c, m, e in [
-        (s, c, m, e)
-        for s in selections
+    crossovers = [single_point_co, multi_point_co, uniform_co]
+    mutations = [swap, random_resetting]
+
+    for c, m in [
+        (c, m)
         for c in crossovers
         for m in mutations
-        for e in elitism
     ]:
-        check_setting(
-            size=50,
-            gens=1000,
-            select=s,
-            crossover=c,
-            mutate=m,
-            co_p=0.8,
-            mu_p=0.2,
-            elitism=e
+        figure = go.Figure()
+        fitness = []
+        for i in range(10):
+            pop = Population(
+            size=500, optim="min", init_repr=deepcopy(simple), valid_set=[1, 2, 3, 4, 5, 6, 7, 8, 9]
         )
-        print()
+            result = pop.evolve(
+                gens=500,
+                select=tournament,
+                crossover=c,
+                mutate=m,
+                co_p=0.8,
+                mu_p=1.0,
+                elitism=True
+            )
+            fitness.append(result)
+
+        results = [item[-1] for item in fitness]
+
+        best = min(results)
+        best_index = results.index(best)
+        average = sum(results) / len(results)
+        st_dev = std(results)
+
+        for i, item in enumerate(fitness):
+            figure.add_scatter(
+                y=item,
+                mode='lines',
+                name=f'Test {i}'
+            )
+
+        figure.update_layout(
+            title=f"{c.__name__}/{m.__name__} fitness. Best: {best}, average: {average}, std: {st_dev:.2f}",
+            xaxis_title="Number of generations",
+            yaxis_title="Fitness",
+        )
+
+        figure.write_image(f"{c.__name__}_{m.__name__}.png")
+
+        comp_figure.add_scatter(
+            y=fitness[best_index],
+            mode='lines',
+            name=f'{c.__name__}/{m.__name__}',
+        )
+
+    comp_figure.update_layout(
+        title="Fitness function comparison (best runs)",
+        xaxis_title="Number of generations",
+        yaxis_title="Fitness",
+    )
+
+    comp_figure.write_image("comparison.png")
 
 
 total_check()

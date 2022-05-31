@@ -96,7 +96,7 @@ def check_setting(
         )
 
 
-def total_check():
+def total_check(values, folder):
     comp_figure = go.Figure()
 
     crossovers = [single_point_co, multi_point_co, uniform_co]
@@ -111,11 +111,11 @@ def total_check():
         fitness = []
         for i in range(10):
             pop = Population(
-            size=500, optim="min", init_repr=deepcopy(simple), valid_set=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+            size=500, optim="min", init_repr=deepcopy(values), valid_set=[1, 2, 3, 4, 5, 6, 7, 8, 9]
         )
             result = pop.evolve(
                 gens=500,
-                select=tournament,
+                select=ranking,
                 crossover=c,
                 mutate=m,
                 co_p=0.8,
@@ -144,7 +144,7 @@ def total_check():
             yaxis_title="Fitness",
         )
 
-        figure.write_image(f"{c.__name__}_{m.__name__}.png")
+        figure.write_image(f"{folder}/{c.__name__}_{m.__name__}.png")
 
         comp_figure.add_scatter(
             y=fitness[best_index],
@@ -158,7 +158,9 @@ def total_check():
         yaxis_title="Fitness",
     )
 
-    comp_figure.write_image("comparison.png")
+    comp_figure.write_image(f"{folder}/comparison.png")
 
 
-total_check()
+total_check(simple, "simple")
+total_check(hard, "hard")
+total_check(evil, "evil")
